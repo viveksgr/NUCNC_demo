@@ -110,3 +110,37 @@ print(fullfile(datapath,sprintf('LNP%s',units_{ii})), '-dpng');
 % sprintf('Prediction accuracy for the GLM model: %f',pred_acc2(2));
 
 %% MAP estimate - decoding
+
+% Easy way - estimate the entire encoding table 
+% Should only be used for an ensemble. Grid cells do not identify spatial
+% locations uniquely. 
+% Compromised perfomance for ease of understanding the code. 
+% Just the sketch of code - add all loops (n_neurons, n_stim, n_test bins)
+% 
+% % Ideally:
+% tuning_curves = zeros(length(cell_names),(nbins+1)^2);
+% for ii = 1:length(cell_names)
+%     tuning_curves(ii,:)=res(ii).fir_freq(:);
+% end
+
+ii = 1;
+tuning_curves = res(ii).fir_freq(:);
+% Test spike_data = y_test;
+dt = median(diff(res(ii).time));
+% Loop over spike_data bins
+testbin = 10; % Choose the firing rate
+stim_bin = 12; % Choose the spatial location
+fir_rate = y_test(testbin);
+tuning_location = tuning_curves(stim_bin);
+
+% What is the (unnormalized) probability of being at this tuning_location given fir_rate?
+% Assume uniform prior.
+poster_ = (tuning_location.^fir_rate)*exp(-1*dt*tuning_location); % Check the position of dt
+% This gives posterior probability at location given by stim_bin. Loop over
+% stim_bin to obtain Xmap for the firing rate given by testbin. 
+
+
+
+% Right way - use the GLM to obtain x_map straight away.
+% Maximize log p(X|D,k) which is "trivial" and is left as an exercise for
+% the reader.

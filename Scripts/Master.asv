@@ -58,7 +58,7 @@ fprintf('Grid fields saved in datapath\n')
 % The model is overparametrized - maybe we don't need so many basis functions
 % for defining a spatial RF?
 
-% This is not truly out-of-sample prediction. That's why the fit will be perfect.
+% This is not truly out-of-sample prediction. 
 % Sampling of the stimulus was quite good - the benefit of doing all this will not apparant here.
 
 nfolds = 10; % Number of folds for cross validation. 
@@ -82,7 +82,7 @@ y_pred = glmval(p,X_test,'log');
 
 spike_pred = poissrnd(y_pred);
 pred_acc = corrcoef(spike_pred,res(ii).spike_data(test_mask));
-fprintf('Prediction accuracy for the LNP model: %f\n',pred_acc(1));
+fprintf('Prediction accuracy for the LNP model: %f\n',pred_acc(2));
 
 % Plot Receptive Field
 p(1) = []; %Pop out constant term
@@ -110,3 +110,35 @@ print(fullfile(datapath,sprintf('LNP%s',units_{ii})), '-dpng');
 % sprintf('Prediction accuracy for the GLM model: %f',pred_acc2(2));
 
 %% MAP estimate - decoding
+
+% Easy way - estimate the entire encoding table 
+% Should only be used for an ensemble. Grid cells do not identify spatial
+% locations uniquely. 
+% Compromised perfomance for ease of understanding the code. 
+% Just the sketch of code - add all loops (n_neurons, n_stim, n_test bins)
+% 
+% % Ideally:
+% tuning_curves = zeros(length(cell_names),(nbins+1)^2);
+% for ii = 1:length(cell_names)
+%     tuning_curves(ii,:)=res(ii).fir_freq(:);
+% end
+
+ii = 1;
+tuning_curves = res(ii).fir_freq(:);
+% Test spike_data = y_test;
+dt = median(diff(res(ii).time));
+% Loop over spike_data bins
+testbin = 10; % Choose the firing rate
+stim_bin = 12; % Choose the spatial location
+fir_rate = y_test(testbin);
+tuning_location = tuning(stim_bin);
+
+% What is the probability of being at this tuning_location given fir_rate?
+poster_ = tuning_location.^
+
+
+
+
+% Right way - use the GLM to obtain x_map straight away.
+% Maximize log p(X|D,k) which is "trivial" and is left as an exercise for
+% the reader.
