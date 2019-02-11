@@ -139,8 +139,6 @@ poster_ = (tuning_location.^fir_rate)*exp(-1*dt*tuning_location); % Check the po
 % This gives posterior probability at location given by stim_bin. Loop over
 % stim_bin to obtain Xmap for the firing rate given by testbin. 
 
-
-
 % Right way - use the GLM to obtain x_map straight away.
 % Maximize log p(X|D,k) which is "trivial" and is left as an exercise for
 % the reader.

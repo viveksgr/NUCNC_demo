@@ -1,4 +1,4 @@
-function [X,y] = create_datamat(behav_data,fir_list,edge_,history)
+ function [X,y] = create_datamat(behav_data,fir_list,edge_,history)
 % Create datamatrix to be used for predictions in the GLM
 % X = NxP, N = data points, P = spatial predictors
 % Discretization of space done at edges - not accurate. 
